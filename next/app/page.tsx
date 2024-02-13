@@ -1,3 +1,9 @@
+import { SearchInput } from "./components/SearchInput";
+
 export default function Home() {
-  return <div>empty</div>;
+  return (
+    <div>
+      <SearchInput />
+    </div>
+  );
 }
