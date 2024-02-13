@@ -1,4 +1,5 @@
 import styles from "./SearchInput.module.css";
+import { SearchResultItem } from "./SearchResultItem";
 
 interface Props {}
 
