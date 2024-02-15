@@ -1,8 +1,13 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCoffee } from "@fortawesome/free-solid-svg-icons";
 import styles from "./SearchInput.module.css";
-import { SearchResultItem } from "./SearchResultItem";
 
 interface Props {}
 
 export function SearchInput(props: Props) {
-  return <input className={styles.component} />;
+  return (
+    <div>
+      <FontAwesomeIcon icon={faCoffee} /> <input className={styles.component} />
+    </div>
+  );
 }
