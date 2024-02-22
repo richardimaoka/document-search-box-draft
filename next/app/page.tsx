@@ -1,10 +1,6 @@
 import styles from "./page.module.css";
-import { SearchInput } from "./components/SearchInput";
+import { SearchBox } from "./components/SearchBox";
 
 export default function Home() {
-  return (
-    <div className={styles.component}>
-      <SearchInput />
-    </div>
-  );
+  return <SearchBox />;
 }

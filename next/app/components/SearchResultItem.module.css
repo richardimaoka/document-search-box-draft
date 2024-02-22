@@ -1,3 +1,8 @@
 .component {
+  background-color: white;
+
+  padding: 8px;
+
+  /* cancel the default styles */
   list-style-type: none;
 }
