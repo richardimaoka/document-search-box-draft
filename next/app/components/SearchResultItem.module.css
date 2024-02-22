@@ -7,11 +7,16 @@
   list-style-type: none;
 }
 
+.component:hover {
+  background-color: #f1f1f1;
+}
+
 .title {
   font-size: 20px;
   font-weight: 700;
 }
 
 .description {
+  margin-top: 4px;
   font-size: 16px;
 }
