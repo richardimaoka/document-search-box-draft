@@ -10,9 +10,9 @@ interface Props {
 export function SearchResultItem(props: Props) {
   return (
     <li className={styles.component}>
-      <div>{props.name}</div>
+      <div className={styles.title}>{props.name}</div>
       <SearchResultBreadcrumb breadcrumb={props.breadcrumb} />
-      <div>{props.name}</div>
+      <div className={styles.description}>{props.name}</div>
     </li>
   );
 }

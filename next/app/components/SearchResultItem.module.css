@@ -6,3 +6,12 @@
   /* cancel the default styles */
   list-style-type: none;
 }
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.description {
+  font-size: 16px;
+}
