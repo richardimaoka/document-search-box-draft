@@ -1,11 +1,14 @@
 {
-	"folders": [
-		{
-			"path": "next"
-		},
-		{
-			"path": "json-server"
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": "next"
+    },
+    {
+      "path": "json-server"
+    },
+    {
+      "path": "express"
+    }
+  ],
+  "settings": {}
 }
