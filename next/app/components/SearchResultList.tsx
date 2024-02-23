@@ -10,8 +10,8 @@ export function SearchResultList(props: Props) {
     <ul className={styles.component}>
       {props.items.map((x) => (
         <SearchResultItem
-          key={x.name}
-          name={x.name}
+          key={x.title}
+          title={x.title}
           description={x.description}
           breadcrumb={x.breadcrumb}
         />

@@ -11,7 +11,7 @@ type DocEntry = {
 };
 
 function isArray(obj: any): obj is any[] {
-  return true;
+  return Array.isArray(obj);
 }
 
 function analyzeDocEntry(obj: any): string {
@@ -57,7 +57,6 @@ function isDocEntry(obj: any): obj is DocEntry {
   }
 }
 
-// Upon exception thrown from this func, let express.js default error handler to return 500 error.
 // Use `asserts` to declare it throws. Exception messages are used to detail where things weng wrong.
 function assertEntries(
   filename: string,
