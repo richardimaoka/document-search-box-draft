@@ -14,51 +14,67 @@ function isArray(obj: any): obj is any[] {
   return true;
 }
 
-function readJson(): DocEntry[] {
-  // Get JSON from the file
-  const jsonString = fs.readFileSync(__dirname + "/data.json", "utf8");
+function isDocEntry(obj: any): obj is DocEntry {
+  console.log("obj", obj);
+  // Check title
+  if ("title" in obj === false || typeof obj.title !== "string") {
+    return false;
+  }
 
-  // Let the default error handler of express.js to handle JSON parse exceptions, which results in 500 error
-  const arrayOfObjs = JSON.parse(jsonString);
+  // Check description
+  if ("description" in obj === false || typeof obj.description !== "string") {
+    return false;
+  }
 
-  const docEntries: DocEntry[] = [];
-  if (isArray(arrayOfObjs)) {
-    for (const elem of arrayOfObjs) {
-      const entry: DocEntry = {
-        title: "",
-        description: "",
-        breadcrumb: [],
-      };
-
-      if (typeof elem === "object") {
-        let doPushEntry = false;
-        if ("title" in elem && typeof elem.title === "string") {
-          entry.title = elem.title;
-          doPushEntry = true;
-        }
-
-        if ("description" in elem && typeof elem.description === "string") {
-          entry.title = elem.description;
-          doPushEntry = true;
-        }
-
-        if ("breadcrumb" in elem && Array.isArray(elem.breadcrumb)) {
-          for (const b of elem.breadcrumb) {
-            if (typeof b === "string") {
-              entry.breadcrumb.push(b);
-              doPushEntry = true;
-            }
-          }
-        }
-
-        if (doPushEntry) {
-          docEntries.push(entry);
-        }
-      }
+  // Check breadcrumb
+  if ("breadcrumb" in obj === false) {
+    return false;
+  }
+  const breadcrumb = obj.breadcrumb;
+  if (!isArray(breadcrumb)) {
+    return false;
+  }
+  for (const b of breadcrumb) {
+    if (typeof b !== "string") {
+      return false;
     }
   }
 
-  return docEntries;
+  // If everything is ok, then true
+  return true;
+}
+
+// Upon exception thrown from this func, let express.js default error handler to return 500 error.
+// Use `asserts` to declare it throws. Exception messages are used to detail where things weng wrong.
+function assertEntries(
+  filename: string,
+  arrOfObjs: any
+): asserts arrOfObjs is DocEntry[] {
+  if (!isArray(arrOfObjs)) {
+    throw new Error(`data in file = '${filename}' is not an array`);
+  }
+
+  for (let index = 0; index < arrOfObjs.length; index++) {
+    const elem = arrOfObjs[index];
+    if (!isDocEntry(elem)) {
+      throw new Error(
+        `[${index}] element in file = '${filename}' is not a valid DocEntry`
+      );
+    }
+  }
+}
+
+function readJson(): DocEntry[] {
+  const filename = __dirname + "/data.json";
+
+  // Get JSON from the file
+  const jsonString = fs.readFileSync(filename, "utf8");
+
+  // Let the default error handler of express.js to handle exceptions, which results in 500 error
+  const entries = JSON.parse(jsonString);
+  assertEntries(filename, entries);
+
+  return entries;
 }
 
 function queryStringFilter(req: Request): string {
@@ -89,7 +105,7 @@ app.get("/", (req, res) => {
 
   const filteredEntries = filterEntries(entries, filterWord);
 
-  res.send(filteredEntries);
+  res.json(filteredEntries);
 });
 
 app.listen(port, () => {
