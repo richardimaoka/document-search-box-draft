@@ -15,3 +15,7 @@
   flex-grow: 1;
   border-style: none;
 }
+
+.input:focus {
+  outline: none;
+}
