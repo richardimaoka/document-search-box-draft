@@ -1,5 +1,6 @@
 import styles from "./page.module.css";
 import { SearchBox } from "./components/SearchBox";
+import { fetchData } from "./api";
 
 const items = [
   {
@@ -22,6 +23,8 @@ const items = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const res = await fetchData();
+
   return <SearchBox searchResultItems={items} />;
 }

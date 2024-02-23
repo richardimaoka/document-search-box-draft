@@ -14,34 +14,47 @@ function isArray(obj: any): obj is any[] {
   return true;
 }
 
-function isDocEntry(obj: any): obj is DocEntry {
-  console.log("obj", obj);
+function analyzeDocEntry(obj: any): string {
   // Check title
-  if ("title" in obj === false || typeof obj.title !== "string") {
-    return false;
+  if ("title" in obj === false) {
+    return "title is missing";
+  } else if (typeof obj.title !== "string") {
+    return "title is not a string";
   }
 
   // Check description
-  if ("description" in obj === false || typeof obj.description !== "string") {
-    return false;
+  if ("description" in obj === false) {
+    return "description is missing";
+  } else if (typeof obj.description !== "string") {
+    return "description is not a string";
   }
 
   // Check breadcrumb
   if ("breadcrumb" in obj === false) {
-    return false;
+    return "breadcrumb is missing";
   }
   const breadcrumb = obj.breadcrumb;
   if (!isArray(breadcrumb)) {
-    return false;
+    return "breadcrumb is not an array";
   }
-  for (const b of breadcrumb) {
+  for (let index = 0; index < breadcrumb.length; index++) {
+    const b = breadcrumb[index];
     if (typeof b !== "string") {
-      return false;
+      return `[${index}] element of breadcrumb is not a string`;
     }
   }
 
-  // If everything is ok, then true
-  return true;
+  // Empty string means everything ok
+  return "";
+}
+
+function isDocEntry(obj: any): obj is DocEntry {
+  const errorMessage = analyzeDocEntry(obj);
+  if (errorMessage === "") {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 // Upon exception thrown from this func, let express.js default error handler to return 500 error.
@@ -57,8 +70,9 @@ function assertEntries(
   for (let index = 0; index < arrOfObjs.length; index++) {
     const elem = arrOfObjs[index];
     if (!isDocEntry(elem)) {
+      const errorMessage = analyzeDocEntry(elem);
       throw new Error(
-        `[${index}] element in file = '${filename}' is not a valid DocEntry`
+        `file = '${filename}' has an invalid [${index}] element, ${errorMessage}`
       );
     }
   }
