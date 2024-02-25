@@ -7,6 +7,8 @@ import { SearchResultItemProps } from "./SearchResultItem";
 import { SearchResultList } from "./SearchResultList";
 import { search } from "./searchActions";
 import { DocEntry } from "../api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGear } from "@fortawesome/free-solid-svg-icons";
 
 interface Props {}
 
@@ -38,16 +40,16 @@ export function SearchBox(props: Props) {
   useEffect(() => {
     if (filterWord === searchResults.filterWord) {
       setItems(searchResults.results);
-    } else {
-      console.log(
-        `loading... fiterWord = '${filterWord}', fiterWord from search = '${searchResults.filterWord}'`
-      );
     }
   }, [filterWord, searchResults]);
 
   return (
     <div className={styles.component}>
-      <SearchInput filterWord={filterWord} setFilterWord={updateFilter} />
+      <SearchInput
+        filterWord={filterWord}
+        setFilterWord={updateFilter}
+        loading={filterWord !== searchResults.filterWord}
+      />
       <SearchResultList items={items} />
     </div>
   );
