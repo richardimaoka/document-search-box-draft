@@ -120,12 +120,13 @@ app.get("/", async (req, res) => {
   // Get query string `?filter=...`
   const filterWord = queryStringFilter(req);
 
-  console.log(`Called with filter word = '${filterWord}'`);
+  console.log(`express.js called with filter word = '${filterWord}'`);
 
   const filteredEntries = filterEntries(entries, filterWord);
 
   await sleep(500);
 
+  console.log(filteredEntries);
   res.json(filteredEntries);
 });
 
