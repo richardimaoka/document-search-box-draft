@@ -7,27 +7,30 @@ import { SearchResultItemProps } from "./SearchResultItem";
 import { SearchResultList } from "./SearchResultList";
 import { search } from "./searchActions";
 import { DocEntry } from "../api";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGear } from "@fortawesome/free-solid-svg-icons";
 
 interface Props {}
 
-type SearchResult = {
-  results: DocEntry[];
+type SearchResults = {
+  items: DocEntry[];
   filterWord: string;
 };
 
 export function SearchBox(props: Props) {
   const [filterWord, setFilterWord] = useState("");
-  const [searchResults, setSearchResults] = useState<SearchResult>({
-    results: [],
+  const [items, setItems] = useState<SearchResultItemProps[]>([]);
+
+  // Instead of immediately setting search results to `items`, store the results here temporarily,
+  // and only update the `items` when `filterWord` matches (i.e. the most-recent callServer() attempt)
+  const [tempResults, setTempResults] = useState<SearchResults>({
+    items: [],
     filterWord: "",
   });
-  const [items, setItems] = useState<SearchResultItemProps[]>([]);
+
+  const waitingLastCallServerAttempt = filterWord !== tempResults.filterWord;
 
   async function callServer(w: string) {
     const [searchResults, sf] = await search(w);
-    setSearchResults({ results: searchResults, filterWord: w });
+    setTempResults({ items: searchResults, filterWord: w });
   }
 
   async function updateFilter(newFilterWord: string) {
@@ -38,17 +41,17 @@ export function SearchBox(props: Props) {
   }
 
   useEffect(() => {
-    if (filterWord === searchResults.filterWord) {
-      setItems(searchResults.results);
+    if (!waitingLastCallServerAttempt) {
+      setItems(tempResults.items);
     }
-  }, [filterWord, searchResults]);
+  }, [waitingLastCallServerAttempt, tempResults]);
 
   return (
     <div className={styles.component}>
       <SearchInput
         filterWord={filterWord}
         setFilterWord={updateFilter}
-        loading={filterWord !== searchResults.filterWord}
+        loading={waitingLastCallServerAttempt}
       />
       <SearchResultList items={items} />
     </div>
