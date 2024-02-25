@@ -1,4 +1,4 @@
-type DocEntry = {
+export type DocEntry = {
   title: string;
   description: string;
   breadcrumb: string[];
@@ -68,8 +68,10 @@ function assertEntries(arrOfObjs: any): asserts arrOfObjs is DocEntry[] {
   }
 }
 
-export async function fetchData(): Promise<DocEntry[]> {
-  const res = await fetch("http://localhost:3035");
+export async function fetchData(filterWord: string): Promise<DocEntry[]> {
+  const res = await fetch(
+    `http://localhost:3035?filter=${encodeURIComponent(filterWord)}`
+  );
 
   let jsonData: any;
   try {
