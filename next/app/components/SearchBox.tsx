@@ -38,6 +38,10 @@ export function SearchBox(props: Props) {
   useEffect(() => {
     if (filterWord === searchResults.filterWord) {
       setItems(searchResults.results);
+    } else {
+      console.log(
+        `loading... fiterWord = '${filterWord}', fiterWord from search = '${searchResults.filterWord}'`
+      );
     }
   }, [filterWord, searchResults]);
 
